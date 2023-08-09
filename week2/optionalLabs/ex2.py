@@ -8,7 +8,7 @@ from keras.models import Sequential
 from lab_coffee_utils import load_coffee_data, plt_roast
 x,y = load_coffee_data()
 norm1 = tf.keras.layers.Normalization(axis=-1)
-print(x.shape)
+
 norm1.adapt(x)
 xn = norm1(x)
 xt = np.tile(xn,(1000,1))
@@ -22,3 +22,13 @@ model = Sequential(
      ]
 )
 model.summary()
+w1,b1 = model.get_layer("layer1").get_weights()
+model.compile(
+    loss =tf.keras.losses.BinaryCrossentropy(),
+    optimizer = tf.keras.optimizers.Adam(learning_rate=0.01))
+model.fit(xt,yt,epochs=10)
+wnew,bnew = model.get_layer("layer1").get_weights()
+print(w1,b1)
+print("------------------------------")
+print(wnew,bnew)
+
